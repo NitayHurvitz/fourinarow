@@ -1,4 +1,7 @@
 
+const board = document.getElementById("board")
+let turn = "red"
+
 function createCellElement(row, col, cellSize) {
     const cell = document.createElement("div")
     cell.className = "cell"
@@ -6,9 +9,11 @@ function createCellElement(row, col, cellSize) {
     cell.col = col
     cell.style.height = `${cellSize - 6}px`
     cell.style.width = `${cellSize - 6}px`
+    cell.style.background = "white"
 
     return cell;
 }
+
 
 function createColumnElement(colNum, numOfRows, cellSize) {
     const column = document.createElement("div")
@@ -39,14 +44,51 @@ function generateCells() {
     }
 }
 
+function getColumnFromTarget(target) {
+    const targetCol = target.className == "column" ?
+        target :
+        target.className == "cell" ?
+            target.parentElement :
+            target.className == "coin" ?
+                target.parentElement.parentElement :
+                undefined
+
+    return targetCol;
+}
+
+function getLastCellFreeCell(cells) {
+    let lastCell = undefined;
+    cells.forEach(cell => {
+        if (!cell.hasChildNodes()) {
+            lastCell = cell;
+        }
+    })
+    return lastCell
+}
+
 function handleBoardClicked(event) {
-    const targetCell = event.target
-    if (targetCell.className != "cell") {
+    const targetCol = getColumnFromTarget(event.target)
+    if (targetCol === undefined)
         return
+
+    cells = Array.from(targetCol.getElementsByClassName("cell"))
+    const lastCell = getLastCellFreeCell(cells);
+
+    if (lastCell !== undefined) {
+        lastCell.appendChild(getCoin(lastCell.style.height, turn))
     }
-    console.log(targetCell)
 
+    turn = turn === "red" ? "blue" : "red"
+}
 
+function getCoin(diameter, turn) {
+    const coin = document.createElement("div")
+    coin.className = "coin"
+    coin.style.height = diameter
+    coin.style.width = diameter
+    coin.style.background = turn
+    coin.style.borderRadius = diameter
+    return coin
 }
 
 function handleInputChange() {
@@ -55,27 +97,31 @@ function handleInputChange() {
 }
 
 function handleMouseOver(event) {
-    const column = event.target.parentElement
-    if (column.className != "column")
-        return
-    column.style.background = "green"
+    const column = getColumnFromTarget(event.target)
+    if (column !== undefined) {
+        //column.style.borderStyle = "solid"
+        //column.style.borderColor = turn;
+        column.style.background = turn;
+    }
 }
 
 function handleMouseLeave(event) {
-    const column = event.target.parentElement
-    if (column.className != "column")
-        return
-    column.style.background = "white"
+    const column = getColumnFromTarget(event.target)
+    if (column !== undefined) {
+        //column.style.borderStyle = "None"
+        column.style.background = "white"
+
+    }
 }
 
 
-const board = document.getElementById("board")
 board.addEventListener("click", handleBoardClicked)
-Array.from(document.getElementsByClassName("input")).forEach(
-    element => element.addEventListener("change", handleInputChange)
-)
-
 board.addEventListener("mouseover", handleMouseOver)
 board.addEventListener("mouseout", handleMouseLeave)
+
+document.getElementById("input-rows").addEventListener("change", handleInputChange)
+document.getElementById("input-cols").addEventListener("change", handleInputChange)
+document.getElementById("restart").addEventListener("click", generateCells)
+
 
 generateCells()
