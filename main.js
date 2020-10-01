@@ -2,6 +2,16 @@
 const board = document.getElementById("board")
 let turn = "red"
 
+function createCoinElement(diameterInPx) {
+    const coin = document.createElement("div")
+    coin.className = "coin"
+    coin.style.height = diameterInPx
+    coin.style.width = diameterInPx
+    coin.style.background = turn
+    coin.style.borderRadius = diameterInPx
+    return coin
+}
+
 function createCellElement(row, col, cellSize) {
     const cell = document.createElement("div")
     cell.className = "cell"
@@ -13,7 +23,6 @@ function createCellElement(row, col, cellSize) {
 
     return cell;
 }
-
 
 function createColumnElement(colNum, numOfRows, cellSize) {
     const column = document.createElement("div")
@@ -27,7 +36,7 @@ function createColumnElement(colNum, numOfRows, cellSize) {
 
 }
 
-function generateCells() {
+function startBoard() {
     const numOfRows = document.getElementById("input-rows").value
     const numOfColumns = document.getElementById("input-cols").value
 
@@ -44,7 +53,23 @@ function generateCells() {
     }
 }
 
-function getColumnFromTarget(target) {
+function handleBoardClicked(event) {
+    const targetCol = getColumnFromEventTarget(event.target)
+    if (targetCol === undefined)
+        return
+
+    cells = Array.from(targetCol.getElementsByClassName("cell"))
+    const lastCell = getLastFreeCell(cells);
+
+    if (lastCell !== undefined) {
+        lastCell.appendChild(createCoinElement(lastCell.style.height))
+        turn = turn === "red" ? "blue" : "red"
+        targetCol.style.background = turn
+    }
+
+}
+
+function getColumnFromEventTarget(target) {
     const targetCol = target.className == "column" ?
         target :
         target.className == "cell" ?
@@ -56,7 +81,7 @@ function getColumnFromTarget(target) {
     return targetCol;
 }
 
-function getLastCellFreeCell(cells) {
+function getLastFreeCell(cells) {
     let lastCell = undefined;
     cells.forEach(cell => {
         if (!cell.hasChildNodes()) {
@@ -66,51 +91,23 @@ function getLastCellFreeCell(cells) {
     return lastCell
 }
 
-function handleBoardClicked(event) {
-    const targetCol = getColumnFromTarget(event.target)
-    if (targetCol === undefined)
-        return
-
-    cells = Array.from(targetCol.getElementsByClassName("cell"))
-    const lastCell = getLastCellFreeCell(cells);
-
-    if (lastCell !== undefined) {
-        lastCell.appendChild(getCoin(lastCell.style.height, turn))
+function startBoardWithWarn() {
+    if (confirm("Are you sure you want to restart your game?")) {
+        startBoard()
     }
-
-    turn = turn === "red" ? "blue" : "red"
-}
-
-function getCoin(diameter, turn) {
-    const coin = document.createElement("div")
-    coin.className = "coin"
-    coin.style.height = diameter
-    coin.style.width = diameter
-    coin.style.background = turn
-    coin.style.borderRadius = diameter
-    return coin
-}
-
-function handleInputChange() {
-    console.log("input changed")
-    generateCells()
 }
 
 function handleMouseOver(event) {
-    const column = getColumnFromTarget(event.target)
+    const column = getColumnFromEventTarget(event.target)
     if (column !== undefined) {
-        //column.style.borderStyle = "solid"
-        //column.style.borderColor = turn;
         column.style.background = turn;
     }
 }
 
 function handleMouseLeave(event) {
-    const column = getColumnFromTarget(event.target)
+    const column = getColumnFromEventTarget(event.target)
     if (column !== undefined) {
-        //column.style.borderStyle = "None"
         column.style.background = "white"
-
     }
 }
 
@@ -119,9 +116,9 @@ board.addEventListener("click", handleBoardClicked)
 board.addEventListener("mouseover", handleMouseOver)
 board.addEventListener("mouseout", handleMouseLeave)
 
-document.getElementById("input-rows").addEventListener("change", handleInputChange)
-document.getElementById("input-cols").addEventListener("change", handleInputChange)
-document.getElementById("restart").addEventListener("click", generateCells)
+document.getElementById("input-rows").addEventListener("change", startBoardWithWarn)
+document.getElementById("input-cols").addEventListener("change", startBoardWithWarn)
+document.getElementById("restart").addEventListener("click", startBoardWithWarn)
 
 
-generateCells()
+startBoard()
