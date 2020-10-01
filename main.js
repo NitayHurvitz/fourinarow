@@ -118,7 +118,7 @@ board.addEventListener("mouseout", handleMouseLeave)
 
 document.getElementById("input-rows").addEventListener("change", startBoardWithWarn)
 document.getElementById("input-cols").addEventListener("change", startBoardWithWarn)
-document.getElementById("restart").addEventListener("click", startBoardWithWarn)
+document.getElementById("restart-btn").addEventListener("click", startBoardWithWarn)
 
 
 startBoard()
