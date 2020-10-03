@@ -1,0 +1,75 @@
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#inputs{
+    width: 300px;
+}
+
+.input{
+    margin: 5px;
+    width: 150px;
+}
+
+.board{
+    --cell-size: 0px;
+    --player-1-color: white;
+    --player-2-color: white;
+    --cell-margin: 2px;
+    --board-width: 0px;
+    --column-hover-background: gray;
+
+    border: 5px;
+    border-style: outset;
+    margin: 10px;
+    display: flex;
+    width: var(--board-width);
+}
+
+.column{
+    display: flex;
+    flex-direction: column;
+}
+
+.column:hover{
+    background: var(--column-hover-background);
+}
+
+.cell{
+    box-sizing: border-box;
+    height: calc(var(--cell-size) - 2 * var(--cell-margin));
+    width: calc(var(--cell-size) - 2 * var(--cell-margin));
+    margin: 2px;
+    border: 1px solid;
+    background: white;
+}
+
+@keyframes coindrop{
+    from {
+        opacity: 0%;
+        top: -300px
+    }
+    to {
+        opacity: 100%;
+        top: 0px
+    }
+}
+
+.coin{
+    box-sizing: border-box;
+    position: relative;
+    animation: coindrop 0.2s;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+}
+
+.player-1{
+    background: var(--player-1-color);
+}
+
+.player-2{
+    background: var(--player-2-color);
+}
