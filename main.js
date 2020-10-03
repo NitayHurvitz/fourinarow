@@ -15,7 +15,7 @@ const PLAYER_2 = {
     color: "blue"
 }
 const CSS_PROP_NAMES = {
-    BORDER_WIDTH: "--border-width",
+    BORDER_WIDTH: "--board-width",
     CELL_SIZE: "--cell-size",
     PLAYER_1_COLOR: "--player-1-color",
     PLAYER_2_COLOR: "--player-2-color",
@@ -25,7 +25,7 @@ const CSS_PROP_NAMES = {
 const COIN_CLASS = "coin"
 const CELL_CLASS = "cell"
 const COLUMN_CLASS = "column"
-const BOARD_WIDTH_IN_PX = 400
+const BOARD_WIDTH_IN_PX = 500
 
 function createCoinElement() {
     const coin = document.createElement("div")
@@ -74,7 +74,7 @@ function startBoard() {
 function setCssProps() {
     cellSizeInPx = BOARD_WIDTH_IN_PX / colsInput.value
 
-    board.style.setProperty(CSS_PROP_NAMES.BORDER_WIDTH, BOARD_WIDTH_IN_PX)
+    board.style.setProperty(CSS_PROP_NAMES.BORDER_WIDTH, `${BOARD_WIDTH_IN_PX}px`)
     board.style.setProperty(CSS_PROP_NAMES.CELL_SIZE, `${cellSizeInPx}px`)
     board.style.setProperty(CSS_PROP_NAMES.PLAYER_1_COLOR, PLAYER_1.color)
     board.style.setProperty(CSS_PROP_NAMES.PLAYER_2_COLOR, PLAYER_2.color)

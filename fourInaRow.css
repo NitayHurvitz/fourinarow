@@ -14,11 +14,11 @@ body{
 }
 
 .board{
-    --cell-size: 5px;
+    --cell-size: 0px;
     --player-1-color: white;
     --player-2-color: white;
     --cell-margin: 2px;
-    --board-width: 400px;
+    --board-width: 0px;
     --column-hover-background: gray;
 
     border: 5px;
