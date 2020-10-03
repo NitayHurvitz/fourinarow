@@ -19,6 +19,7 @@ body{
     --player-2-color: white;
     --cell-margin: 2px;
     --board-width: 400px;
+    --column-hover-background: gray;
 
     border: 5px;
     border-style: outset;
@@ -30,6 +31,10 @@ body{
 .column{
     display: flex;
     flex-direction: column;
+}
+
+.column:hover{
+    background: var(--column-hover-background);
 }
 
 .cell{

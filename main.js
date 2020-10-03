@@ -14,11 +14,12 @@ const PLAYER_2 = {
     class: "player-2",
     color: "blue"
 }
-const CSS_VARS = {
+const CSS_PROP_NAMES = {
     BORDER_WIDTH: "--border-width",
     CELL_SIZE: "--cell-size",
     PLAYER_1_COLOR: "--player-1-color",
     PLAYER_2_COLOR: "--player-2-color",
+    COLUMN_HOVER_BACKGROUND: "--column-hover-background"
 }
 
 const COIN_CLASS = "coin"
@@ -60,20 +61,24 @@ function startBoard() {
     turn = PLAYER_1
     board.innerHTML = ""
 
+    setCssProps()
+
     const numOfRows = rowsInput.value
     const numOfColumns = colsInput.value
-
-    board.style.setProperty(CSS_VARS.BORDER_WIDTH, BOARD_WIDTH_IN_PX)
-
-    cellSizeInPx = BOARD_WIDTH_IN_PX / numOfColumns
-
-    board.style.setProperty(CSS_VARS.CELL_SIZE, `${cellSizeInPx}px`)
-    board.style.setProperty(CSS_VARS.PLAYER_1_COLOR, PLAYER_1.color)
-    board.style.setProperty(CSS_VARS.PLAYER_2_COLOR, PLAYER_2.color)
 
     for (let colNum = 1; colNum <= numOfColumns; colNum++) {
         board.appendChild(createColumnElement(colNum, numOfRows))
     }
+}
+
+function setCssProps() {
+    cellSizeInPx = BOARD_WIDTH_IN_PX / colsInput.value
+
+    board.style.setProperty(CSS_PROP_NAMES.BORDER_WIDTH, BOARD_WIDTH_IN_PX)
+    board.style.setProperty(CSS_PROP_NAMES.CELL_SIZE, `${cellSizeInPx}px`)
+    board.style.setProperty(CSS_PROP_NAMES.PLAYER_1_COLOR, PLAYER_1.color)
+    board.style.setProperty(CSS_PROP_NAMES.PLAYER_2_COLOR, PLAYER_2.color)
+    board.style.setProperty(CSS_PROP_NAMES.COLUMN_HOVER_BACKGROUND, turn.color)
 }
 
 function onBoardClicked(event) {
@@ -87,9 +92,8 @@ function onBoardClicked(event) {
         gameStarted = true;
         lastCell.appendChild(createCoinElement())
         turn = turn === PLAYER_1 ? PLAYER_2 : PLAYER_1
-        targetCol.classList.add(turn.class)
+        board.style.setProperty(CSS_PROP_NAMES.COLUMN_HOVER_BACKGROUND, turn.color)
     }
-
 }
 
 function getParentColumnOfNode(node) {
@@ -122,24 +126,8 @@ function startBoardWithWarn() {
     }
 }
 
-function onMouseOver(event) {
-    const column = getParentColumnOfNode(event.target)
-    if (column !== undefined) {
-        column.classList.add(turn.class);
-    }
-}
-
-function onMouseLeave(event) {
-    const column = getParentColumnOfNode(event.target)
-    if (column !== undefined) {
-        column.className = COLUMN_CLASS
-    }
-}
-
 
 board.addEventListener("click", onBoardClicked)
-board.addEventListener("mouseover", onMouseOver)
-board.addEventListener("mouseout", onMouseLeave)
 
 document.getElementById("input-rows").addEventListener("change", startBoardWithWarn)
 document.getElementById("input-cols").addEventListener("change", startBoardWithWarn)
